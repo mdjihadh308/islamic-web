@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Stories &amp; Personalities — Islamic History</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="frontend.css">
+</head>
+<body>
+  <div class="pattern-overlay"></div>
+  <nav class="navbar" id="topNav">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><div class="logo-icon">🌙</div><span>Islamic History</span></a>
+      <ul class="nav-menu">
+        <li><a href="index.html"><span class="icon">🏠</span> Home</a></li>
+        <li><a href="life.html"><span class="icon">📖</span> Life</a></li>
+        <li><a href="timeline.html"><span class="icon">⏳</span> Timeline</a></li>
+        <li><a href="hadis.html"><span class="icon">🤲</span> Du'a &amp; Hadis</a></li>
+        <li><a href="newstory.html" class="active"><span class="icon">✨</span> New Story</a></li>
+        <li><a href="about.html"><span class="icon">ℹ️</span> About</a></li>
+        <li><a href="others.html"><span class="icon">📚</span> Others</a></li>
+      </ul>
+    </div>
+  </nav>
+  <nav class="bottom-nav">
+    <div class="bottom-nav-items">
+      <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+      <a href="life.html" class="bottom-nav-item"><span class="nav-icon">📖</span><span class="nav-label">Life</span></a>
+      <a href="timeline.html" class="bottom-nav-item"><span class="nav-icon">⏳</span><span class="nav-label">Timeline</span></a>
+      <a href="hadis.html" class="bottom-nav-item"><span class="nav-icon">🤲</span><span class="nav-label">Du'a</span></a>
+      <a href="newstory.html" class="bottom-nav-item active"><span class="nav-icon">✨</span><span class="nav-label">Stories</span></a>
+      <a href="others.html" class="bottom-nav-item"><span class="nav-icon">📚</span><span class="nav-label">More</span></a>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="page-hero">
+      <div class="container">
+        <div class="breadcrumb"><a href="index.html">Home</a> › New Story</div>
+        <h1>✨ New Stories</h1>
+        <p>Freshly published articles, stories, and historical accounts</p>
+      </div>
+    </div>
+
+    <!-- STORIES SECTION -->
+    <section class="section">
+      <div class="container">
+        <div class="section-title fade-in">
+          <h2>Latest Articles</h2>
+          <div class="title-divider"><span class="ornament">☽ ✦ ☾</span></div>
+        </div>
+        <div class="fe-toolbar">
+          <div class="fe-search-wrap">
+            <span class="fe-search-icon">🔍</span>
+            <input type="text" id="stories-search" placeholder="Search stories...">
+          </div>
+          <select class="fe-filter-select" id="stories-filter">
+            <option value="">All Categories</option>
+            <option>Seerah</option>
+            <option>Battle</option>
+            <option>Scholar</option>
+            <option>Civilisation</option>
+            <option>Khilafah</option>
+          </select>
+        </div>
+        <!-- ⚡ Dynamic stories — rendered by main.js → renderStories() -->
+        <div class="fe-grid" id="stories-grid"></div>
+      </div>
+    </section>
+
+    <!-- PERSONALITIES SECTION -->
+    <section class="section" id="personalities" style="background:linear-gradient(180deg,transparent,rgba(201,168,76,.03),transparent)">
+      <div class="container">
+        <div class="section-title fade-in">
+          <h2>Great Personalities of Islam</h2>
+          <div class="title-divider"><span class="ornament">✦ ☽ ✦</span></div>
+          <p class="subtitle">Companions, caliphs, scholars, and leaders who shaped Islamic civilization</p>
+        </div>
+        <div class="fe-toolbar">
+          <div class="fe-search-wrap">
+            <span class="fe-search-icon">🔍</span>
+            <input type="text" id="personalities-search" placeholder="Search personalities...">
+          </div>
+          <select class="fe-filter-select" id="personalities-filter">
+            <option value="">All Types</option>
+            <option>Prophet</option>
+            <option>Companion</option>
+            <option>Scholar</option>
+            <option>General</option>
+            <option>Women</option>
+          </select>
+        </div>
+        <!-- ⚡ Dynamic personalities — rendered by main.js → renderPersonalities() -->
+        <div class="fe-personalities-grid" id="personalities-grid"></div>
+      </div>
+    </section>
+
+    <footer class="footer"><div class="container"><div class="footer-bottom" style="border-top:none;padding-top:0">
+      <p>© 2025 Islamic History. Made with ❤️ for the Ummah.</p>
+      <p><a href="index.html">← Back to Home</a></p>
+    </div></div></footer>
+  </div>
+  <button class="scroll-top" id="scrollTopBtn">↑</button>
+  <script src="cms-bridge.js"></script>
+  <script src="main.js"></script>
+  <script src="main-nav.js"></script>
+</body>
+</html>

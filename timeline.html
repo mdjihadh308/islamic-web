@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Islamic History Timeline</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="frontend.css">
+</head>
+<body>
+  <div class="pattern-overlay"></div>
+  <nav class="navbar" id="topNav">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><div class="logo-icon">🌙</div><span>Islamic History</span></a>
+      <ul class="nav-menu">
+        <li><a href="index.html"><span class="icon">🏠</span> Home</a></li>
+        <li><a href="life.html"><span class="icon">📖</span> Life</a></li>
+        <li><a href="timeline.html" class="active"><span class="icon">⏳</span> Timeline</a></li>
+        <li><a href="hadis.html"><span class="icon">🤲</span> Du'a &amp; Hadis</a></li>
+        <li><a href="newstory.html"><span class="icon">✨</span> New Story</a></li>
+        <li><a href="about.html"><span class="icon">ℹ️</span> About</a></li>
+        <li><a href="others.html"><span class="icon">📚</span> Others</a></li>
+      </ul>
+    </div>
+  </nav>
+  <nav class="bottom-nav">
+    <div class="bottom-nav-items">
+      <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+      <a href="life.html" class="bottom-nav-item"><span class="nav-icon">📖</span><span class="nav-label">Life</span></a>
+      <a href="timeline.html" class="bottom-nav-item active"><span class="nav-icon">⏳</span><span class="nav-label">Timeline</span></a>
+      <a href="hadis.html" class="bottom-nav-item"><span class="nav-icon">🤲</span><span class="nav-label">Du'a</span></a>
+      <a href="newstory.html" class="bottom-nav-item"><span class="nav-icon">✨</span><span class="nav-label">Stories</span></a>
+      <a href="others.html" class="bottom-nav-item"><span class="nav-icon">📚</span><span class="nav-label">More</span></a>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="page-hero">
+      <div class="container">
+        <div class="breadcrumb"><a href="index.html">Home</a> › Timeline</div>
+        <h1>⏳ Islamic History Timeline</h1>
+        <p>From the first revelation to the modern era — 1400 years of Islamic civilization</p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="fe-toolbar" style="justify-content:center;max-width:700px;margin:0 auto 28px">
+          <div class="fe-search-wrap">
+            <span class="fe-search-icon">🔍</span>
+            <input type="text" id="timeline-search" placeholder="Search timeline events...">
+          </div>
+          <select class="fe-filter-select" id="timeline-filter">
+            <option value="">All Eras</option>
+            <option>Prophetic Era</option>
+            <option>Caliphate</option>
+            <option>Umayyad</option>
+            <option>Abbasid</option>
+            <option>Ottoman</option>
+            <option>Modern</option>
+          </select>
+        </div>
+
+        <!-- ⚡ Dynamic timeline — rendered by main.js → initTimelinePage() -->
+        <div id="timeline-container"></div>
+      </div>
+    </section>
+
+    <footer class="footer"><div class="container"><div class="footer-bottom" style="border-top:none;padding-top:0">
+      <p>© 2025 Islamic History. Made with ❤️ for the Ummah.</p>
+      <p><a href="index.html">← Back to Home</a></p>
+    </div></div></footer>
+  </div>
+  <button class="scroll-top" id="scrollTopBtn">↑</button>
+  <script src="cms-bridge.js"></script>
+  <script src="main.js"></script>
+  <script src="main-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Islamic History CMS</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;700&display=swap');
+    
+    /* Additional fixes for modal and form inputs */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-grid.one {
+      grid-template-columns: 1fr;
+    }
+    .form-grid .full {
+      grid-column: span 2;
+    }
+    .arabic-input {
+      font-family: 'Noto Naskh Arabic', serif;
+      direction: rtl;
+      text-align: right;
+    }
+    .img-preview {
+      width: 100%;
+      min-height: 120px;
+      background: var(--bg-primary);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .img-preview:hover {
+      border-color: var(--gold);
+    }
+    .img-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .img-preview .placeholder {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 20px;
+    }
+    .img-preview .placeholder span {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .confirm-dialog {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .confirm-dialog.open {
+      display: flex;
+    }
+    .confirm-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      animation: modalIn 0.25s ease;
+    }
+    .confirm-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+    .confirm-box h3 {
+      color: var(--gold-light);
+      margin-bottom: 12px;
+    }
+    .confirm-box p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+    }
+    .confirm-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="admin-layout" id="adminLayout" style="display:none">
+
+  <!-- SIDEBAR OVERLAY (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🌙</div>
+      <div class="logo-text">
+        <h2>Islamic CMS</h2>
+        <span>Admin Panel</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <div class="nav-item active" data-section="dashboard" onclick="navigate('dashboard',this)">
+        <span class="nav-icon">📊</span> Dashboard
+      </div>
+
+      <div class="nav-section-label">Content</div>
+      <div class="nav-item" data-section="life" onclick="navigate('life',this)">
+        <span class="nav-icon">📖</span> Life Section
+        <span class="nav-badge" id="badge-life">0</span>
+      </div>
+      <div class="nav-item" data-section="timeline" onclick="navigate('timeline',this)">
+        <span class="nav-icon">⏳</span> Timeline
+        <span class="nav-badge" id="badge-timeline">0</span>
+      </div>
+      <div class="nav-item" data-section="hadis" onclick="navigate('hadis',this)">
+        <span class="nav-icon">🤲</span> Du'a / Hadis
+        <span class="nav-badge" id="badge-hadis">0</span>
+      </div>
+      <div class="nav-item" data-section="stories" onclick="navigate('stories',this)">
+        <span class="nav-icon">✨</span> New Stories
+        <span class="nav-badge" id="badge-stories">0</span>
+      </div>
+      <div class="nav-item" data-section="personalities" onclick="navigate('personalities',this)">
+        <span class="nav-icon">👤</span> Personalities
+        <span class="nav-badge" id="badge-personalities">0</span>
+      </div>
+      <div class="nav-item" data-section="about" onclick="navigate('about',this)">
+        <span class="nav-icon">ℹ️</span> About Us
+        <span class="nav-badge" id="badge-about">0</span>
+      </div>
+      <div class="nav-item" data-section="others" onclick="navigate('others',this)">
+        <span class="nav-icon">📚</span> Others
+        <span class="nav-badge" id="badge-others">0</span>
+      </div>
+
+      <div class="nav-section-label">System</div>
+      <div class="nav-item" data-section="settings" onclick="navigate('settings',this)">
+        <span class="nav-icon">⚙️</span> Settings
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar" id="userAvatarSidebar">A</div>
+        <div class="user-info">
+          <h4 id="userNameSidebar">Admin</h4>
+          <span>Administrator</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN AREA ===== -->
+  <div class="main-area">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+          <span></span><span></span><span></span>
+        </button>
+        <span class="page-title" id="pageTitle">Dashboard</span>
+      </div>
+      <div class="topbar-right">
+        <button class="topbar-btn" title="View Website" onclick="window.open('index.html','_blank')">🌐</button>
+        <button class="logout-btn" onclick="logout()">⬡ Logout</button>
+      </div>
+    </header>
+
+    <!-- CONTENT AREA -->
+    <main class="content">
+
+      <!-- =================== DASHBOARD =================== -->
+      <section id="sec-dashboard" class="section-view active">
+        <div class="stats-grid">
+          <div class="stat-card" onclick="navigate('life')">
+            <span class="stat-icon">📖</span>
+            <div class="stat-value" id="dash-life-count">0</div>
+            <div class="stat-label">Life Entries</div>
+          </div>
+          <div class="stat-card green" onclick="navigate('timeline')">
+            <span class="stat-icon">⏳</span>
+            <div class="stat-value" id="dash-timeline-count">0</div>
+            <div class="stat-label">Timeline Events</div>
+          </div>
+          <div class="stat-card blue" onclick="navigate('hadis')">
+            <span class="stat-icon">🤲</span>
+            <div class="stat-value" id="dash-hadis-count">0</div>
+            <div class="stat-label">Du'a &amp; Hadis</div>
+          </div>
+          <div class="stat-card red" onclick="navigate('stories')">
+            <span class="stat-icon">✨</span>
+            <div class="stat-value" id="dash-stories-count">0</div>
+            <div class="stat-label">New Stories</div>
+          </div>
+          <div class="stat-card purple" onclick="navigate('personalities')">
+            <span class="stat-icon">👤</span>
+            <div class="stat-value" id="dash-personalities-count">0</div>
+            <div class="stat-label">Personalities</div>
+          </div>
+          <div class="stat-card" onclick="navigate('others')">
+            <span class="stat-icon">📚</span>
+            <div class="stat-value" id="dash-others-count">0</div>
+            <div class="stat-label">Others Items</div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="dash-card">
+            <h3>📋 Recent Activity</h3>
+            <ul class="activity-list" id="activityList">
+              <li class="activity-item">
+                <div class="activity-dot"></div>
+                <div>
+                  <div class="activity-text">Welcome to Islamic History CMS! Start by adding content.</div>
+                  <div class="activity-time">Just now</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="dash-card">
+            <h3>⚡ Quick Actions</h3>
+            <div class="quick-actions">
+              <button class="quick-btn" onclick="navigate('life');setTimeout(()=>openModal('life'),100)">
+                ➕ Add Life Entry
+              </button>
+              <button class="quick-btn" onclick="navigate('timeline');setTimeout(()=>openModal('timeline'),100)">
+                ➕ Add Timeline
+              </button>
+              <button class="quick-btn" onclick="navigate('hadis');setTimeout(()=>openModal('hadis'),100)">
+                ➕ Add Du'a/Hadis
+              </button>
+              <button class="quick-btn" onclick="navigate('stories');setTimeout(()=>openModal('stories'),100)">
+                ➕ Add Story
+              </button>
+              <button class="quick-btn" onclick="navigate('personalities');setTimeout(()=>openModal('personalities'),100)">
+                ➕ Add Personality
+              </button>
+              <button class="quick-btn" onclick="exportData()">
+                📤 Export JSON
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================== LIFE SECTION =================== -->
+      <section id="sec-life" class="section-view">
+        <div class="section-header">
+          <h2>📖 Life Section Manager</h2>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="openModal('life')">➕ Add Entry</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="life-search" placeholder="Search life entries..." oninput="filterTable('life',this.value)">
+          </div>
+          <select class="filter-select" id="life-filter" onchange="filterTable('life',null,this.value)">
+            <option value="">All Categories</option>
+            <option value="Early Life">Early Life</option>
+            <option value="Prophethood">Prophethood</option>
+            <option value="Hijra">Hijra</option>
+            <option value="Madinah">Madinah</option>
+            <option value="Final Years">Final Years</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Image</th><th>Title</th><th>Category</th><th>Description</th><th>Created</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="lifeTableBody"></tbody>
+          </table>
+          <div id="lifeEmpty" class="empty-state" style="display:none">
+            <div class="empty-icon">📖</div>
+            <p>No life entries yet. Click "Add Entry" to create one.</p>
+          </div>
+          <div class="pagination" id="lifePagination"></div>
+        </div>
+      </section>
+
+      <!-- =================== TIMELINE =================== -->
+      <section id="sec-timeline" class="section-view">
+        <div class="section-header">
+          <h2>⏳ Timeline Manager</h2>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="openModal('timeline')">➕ Add Event</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="timeline-search" placeholder="Search timeline events..." oninput="filterTable('timeline',this.value)">
+          </div>
+          <select class="filter-select" id="timeline-filter" onchange="filterTable('timeline',null,this.value)">
+            <option value="">All Eras</option>
+            <option value="Prophetic Era">Prophetic Era</option>
+            <option value="Caliphate">Caliphate</option>
+            <option value="Umayyad">Umayyad</option>
+            <option value="Abbasid">Abbasid</option>
+            <option value="Ottoman">Ottoman</option>
+            <option value="Modern">Modern</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Year/Date</th><th>Title</th><th>Era</th><th>Description</th><th>Created</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="timelineTableBody"></tbody>
+          </table>
+          <div id="timelineEmpty" class="empty-state" style="display:none">
+            <div class="empty-icon">⏳</div>
+            <p>No timeline events yet. Click "Add Event" to create one.</p>
+          </div>
+          <div class="pagination" id="timelinePagination"></div>
+        </div>
+      </section>
+
+      <!-- =================== HADIS =================== -->
+      <section id="sec-hadis" class="section-view">
+        <div class="section-header">
+          <h2>🤲 Du'a / Hadis Manager</h2>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="openModal('hadis')">➕ Add Du'a/Hadis</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="hadis-search" placeholder="Search du'a or hadis..." oninput="filterTable('hadis',this.value)">
+          </div>
+          <select class="filter-select" id="hadis-filter" onchange="filterTable('hadis',null,this.value)">
+            <option value="">All Types</option>
+            <option value="Dua">Du'a</option>
+            <option value="Hadis">Hadis</option>
+            <option value="Quran">Quranic</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Arabic</th><th>Translation</th><th>Type</th><th>Reference</th><th>Created</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="hadisTableBody"></tbody>
+          </table>
+          <div id="hadisEmpty" class="empty-state" style="display:none">
+            <div class="empty-icon">🤲</div>
+            <p>No Du'a or Hadis yet. Click "Add Du'a/Hadis" to create one.</p>
+          </div>
+          <div class="pagination" id="hadisPagination"></div>
+        </div>
+      </section>
+
+      <!-- =================== STORIES =================== -->
+      <section id="sec-stories" class="section-view">
+        <div class="section-header">
+          <h2>✨ New Story Manager</h2>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="openModal('stories')">➕ Add Story</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="stories-search" placeholder="Search stories..." oninput="filterTable('stories',this.value)">
+          </div>
+          <select class="filter-select" id="stories-filter" onchange="filterTable('stories',null,this.value)">
+            <option value="">All Categories</option>
+            <option value="Seerah">Seerah</option>
+            <option value="Battle">Battle</option>
+            <option value="Scholar">Scholar</option>
+            <option value="Civilisation">Civilisation</option>
+            <option value="Khilafah">Khilafah</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Image</th><th>Title</th><th>Category</th><th>Description</th><th>Created</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="storiesTableBody"></tbody>
+          </table>
+          <div id="storiesEmpty" class="empty-state" style="display:none">
+            <div class="empty-icon">✨</div>
+            <p>No stories yet. Click "Add Story" to create one.</p>
+          </div>
+          <div class="pagination" id="storiesPagination"></div>
+        </div>
+      </section>
+
+      <!-- =================== PERSONALITIES =================== -->
+      <section id="sec-personalities" class="section-view">
+        <div class="section-header">
+          <h2>👤 Personalities Manager</h2>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="openModal('personalities')">➕ Add Personality</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="personalities-search" placeholder="Search personalities..." oninput="filterTable('personalities',this.value)">
+          </div>
+          <select class="filter-select" id="personalities-filter" onchange="filterTable('personalities',null,this.value)">
+            <option value="">All Types</option>
+            <option value="Companion">Companion</option>
+            <option value="Scholar">Scholar</option>
+            <option value="General">General</option>
+            <option value="Women">Women</option>
+            <option value="Prophet">Prophet</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Image</th><th>Name</th><th>Arabic Name</th><th>Type</th><th>Bio</th><th>Created</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="personalitiesTableBody"></tbody>
+          </table>
+          <div id="personalitiesEmpty" class="empty-state" style="display:none">
+            <div class="empty-icon">👤</div>
+            <p>No personalities yet. Click "Add Personality" to create one.</p>
+          </div>
+          <div class="pagination" id="personalitiesPagination"></div>
+        </div>
+      </section>
+
+      <!-- =================== ABOUT =================== -->
+      <section id="sec-about" class="section-view">
+        <div class="section-header">
+          <h2>ℹ️ About Us Manager</h2>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="openModal('about')">➕ Add Section</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="about-search" placeholder="Search about sections..." oninput="filterTable('about',this.value)">
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Title</th><th>Content</th><th>Type</th><th>Created</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="aboutTableBody"></tbody>
+          </table>
+          <div id="aboutEmpty" class="empty-state" style="display:none">
+            <div class="empty-icon">ℹ️</div>
+            <p>No about content yet. Click "Add Section" to create one.</p>
+          </div>
+          <div class="pagination" id="aboutPagination"></div>
+        </div>
+      </section>
+
+      <!-- =================== OTHERS =================== -->
+      <section id="sec-others" class="section-view">
+        <div class="section-header">
+          <h2>📚 Others Manager</h2>
+          <div class="section-header-right">
+            <button class="btn btn-primary" onclick="openModal('others')">➕ Add Item</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="others-search" placeholder="Search items..." oninput="filterTable('others',this.value)">
+          </div>
+          <select class="filter-select" id="others-filter" onchange="filterTable('others',null,this.value)">
+            <option value="">All Types</option>
+            <option value="Names of Allah">Names of Allah</option>
+            <option value="Pillars">Pillars</option>
+            <option value="Fiqh">Fiqh</option>
+            <option value="Resource">Resource</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Icon</th><th>Title</th><th>Type</th><th>Description</th><th>Created</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="othersTableBody"></tbody>
+          </table>
+          <div id="othersEmpty" class="empty-state" style="display:none">
+            <div class="empty-icon">📚</div>
+            <p>No other items yet. Click "Add Item" to create one.</p>
+          </div>
+          <div class="pagination" id="othersPagination"></div>
+        </div>
+      </section>
+
+      <!-- =================== SETTINGS =================== -->
+      <section id="sec-settings" class="section-view">
+        <div class="section-header">
+          <h2>⚙️ Settings</h2>
+        </div>
+        <div class="settings-grid">
+          <div class="settings-card">
+            <h3>👤 Admin Profile</h3>
+            <div class="form-group">
+              <label class="form-label">Display Name</label>
+              <input type="text" class="form-input" id="settingName" placeholder="Admin Name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              <input type="text" class="form-input" id="settingUsername" placeholder="Username">
+            </div>
+            <button class="btn btn-primary" onclick="saveProfile()">💾 Save Profile</button>
+          </div>
+
+          <div class="settings-card">
+            <h3>🔑 Change Password</h3>
+            <div class="form-group">
+              <label class="form-label">Current Password</label>
+              <input type="password" class="form-input" id="settingOldPwd" placeholder="Current password">
+            </div>
+            <div class="form-group">
+              <label class="form-label">New Password</label>
+              <input type="password" class="form-input" id="settingNewPwd" placeholder="New password (min 6 chars)">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Confirm New Password</label>
+              <input type="password" class="form-input" id="settingConfirmPwd" placeholder="Confirm password">
+            </div>
+            <button class="btn btn-primary" onclick="changePassword()">🔒 Update Password</button>
+          </div>
+
+          <div class="settings-card">
+            <h3>📦 Data Management</h3>
+            <div class="data-actions">
+              <button class="btn btn-green" onclick="exportData()">📤 Export All Data as JSON</button>
+              <label class="btn btn-outline" style="cursor:pointer; display:inline-block;">
+                📥 Import JSON Data
+                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+              </label>
+              <button class="btn btn-danger" onclick="confirmClearData()">🗑️ Clear All Content Data</button>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <h3>💾 Storage Info</h3>
+            <div id="storageInfo" style="font-size:.875rem;color:var(--text-secondary);line-height:2">
+              Loading...
+            </div>
+            <button class="btn btn-outline" style="margin-top:14px" onclick="refreshStorageInfo()">🔄 Refresh</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- =================== MODALS =================== -->
+
+<!-- LIFE MODAL -->
+<div class="modal-backdrop" id="modal-life">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-life-title">➕ Add Life Entry</h3>
+      <button class="modal-close" onclick="closeModal('life')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <input type="hidden" id="editSection">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label">Title *</label>
+          <input type="text" class="form-input" id="life-title" placeholder="Entry title">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-input" id="life-category">
+            <option value="">Select Category</option>
+            <option>Early Life</option><option>Prophethood</option>
+            <option>Hijra</option><option>Madinah</option><option>Final Years</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Description *</label>
+          <textarea class="form-input" id="life-description" rows="5" placeholder="Full description..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Image</label>
+          <div class="img-preview" id="life-img-preview" onclick="document.getElementById('life-image').click()">
+            <div class="placeholder"><span>🖼️</span>Click to upload image</div>
+          </div>
+          <input type="file" id="life-image" accept="image/*" style="display:none" onchange="previewImage(event,'life-img-preview')">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('life')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEntry('life')">💾 Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- TIMELINE MODAL -->
+<div class="modal-backdrop" id="modal-timeline">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-timeline-title">➕ Add Timeline Event</h3>
+      <button class="modal-close" onclick="closeModal('timeline')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Year / Date *</label>
+          <input type="text" class="form-input" id="timeline-date" placeholder="e.g. 622 CE / 1 AH">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Era</label>
+          <select class="form-input" id="timeline-era">
+            <option value="">Select Era</option>
+            <option>Prophetic Era</option><option>Caliphate</option>
+            <option>Umayyad</option><option>Abbasid</option>
+            <option>Ottoman</option><option>Modern</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Title *</label>
+          <input type="text" class="form-input" id="timeline-title" placeholder="Event title">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Description *</label>
+          <textarea class="form-input" id="timeline-description" rows="5" placeholder="Event description..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('timeline')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEntry('timeline')">💾 Save Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- HADIS MODAL -->
+<div class="modal-backdrop" id="modal-hadis">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-hadis-title">➕ Add Du'a / Hadis</h3>
+      <button class="modal-close" onclick="closeModal('hadis')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid one">
+        <div class="form-group">
+          <label class="form-label">Type *</label>
+          <select class="form-input" id="hadis-type">
+            <option value="">Select Type</option>
+            <option>Dua</option><option>Hadis</option><option>Quran</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Arabic Text *</label>
+          <textarea class="form-input arabic-input" id="hadis-arabic" rows="4" placeholder="أدخل النص العربي هنا..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Transliteration</label>
+          <input type="text" class="form-input" id="hadis-transliteration" placeholder="e.g. Bismillah ir-Rahman ir-Raheem">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Translation *</label>
+          <textarea class="form-input" id="hadis-translation" rows="4" placeholder="English translation..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Reference *</label>
+          <input type="text" class="form-input" id="hadis-reference" placeholder="e.g. Bukhari #10, Quran 2:201">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('hadis')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEntry('hadis')">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- STORIES MODAL -->
+<div class="modal-backdrop" id="modal-stories">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-stories-title">➕ Add New Story</h3>
+      <button class="modal-close" onclick="closeModal('stories')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label">Title *</label>
+          <input type="text" class="form-input" id="stories-title" placeholder="Story title">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-input" id="stories-category">
+            <option value="">Select Category</option>
+            <option>Seerah</option><option>Battle</option>
+            <option>Scholar</option><option>Civilisation</option><option>Khilafah</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Description *</label>
+          <textarea class="form-input" id="stories-description" rows="5" placeholder="Story description..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Image</label>
+          <div class="img-preview" id="stories-img-preview" onclick="document.getElementById('stories-image').click()">
+            <div class="placeholder"><span>🖼️</span>Click to upload image</div>
+          </div>
+          <input type="file" id="stories-image" accept="image/*" style="display:none" onchange="previewImage(event,'stories-img-preview')">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('stories')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEntry('stories')">💾 Save Story</button>
+    </div>
+  </div>
+</div>
+
+<!-- PERSONALITIES MODAL -->
+<div class="modal-backdrop" id="modal-personalities">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-personalities-title">➕ Add Personality</h3>
+      <button class="modal-close" onclick="closeModal('personalities')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Name *</label>
+          <input type="text" class="form-input" id="personalities-name" placeholder="Full name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Arabic Name</label>
+          <input type="text" class="form-input arabic-input" id="personalities-arabicName" placeholder="الاسم بالعربية">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-input" id="personalities-type">
+            <option value="">Select Type</option>
+            <option>Prophet</option><option>Companion</option>
+            <option>Scholar</option><option>General</option><option>Women</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Era / Period</label>
+          <input type="text" class="form-input" id="personalities-era" placeholder="e.g. 570–632 CE">
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Biography *</label>
+          <textarea class="form-input" id="personalities-bio" rows="5" placeholder="Short biography..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Image</label>
+          <div class="img-preview" id="personalities-img-preview" onclick="document.getElementById('personalities-image').click()">
+            <div class="placeholder"><span>👤</span>Click to upload image</div>
+          </div>
+          <input type="file" id="personalities-image" accept="image/*" style="display:none" onchange="previewImage(event,'personalities-img-preview')">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('personalities')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEntry('personalities')">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT MODAL -->
+<div class="modal-backdrop" id="modal-about">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-about-title">➕ Add About Section</h3>
+      <button class="modal-close" onclick="closeModal('about')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid one">
+        <div class="form-group">
+          <label class="form-label">Title *</label>
+          <input type="text" class="form-input" id="about-title" placeholder="Section title">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-input" id="about-type">
+            <option value="">Select Type</option>
+            <option>Mission</option><option>Vision</option>
+            <option>Values</option><option>Team</option><option>General</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Content *</label>
+          <textarea class="form-input" id="about-content" rows="6" placeholder="Section content..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('about')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEntry('about')">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- OTHERS MODAL -->
+<div class="modal-backdrop" id="modal-others">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-others-title">➕ Add Other Item</h3>
+      <button class="modal-close" onclick="closeModal('others')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label">Title *</label>
+          <input type="text" class="form-input" id="others-title" placeholder="Item title">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Icon / Emoji</label>
+          <input type="text" class="form-input" id="others-icon" placeholder="🕋" style="font-size:1.2rem">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-input" id="others-type">
+            <option value="">Select Type</option>
+            <option>Names of Allah</option><option>Pillars</option>
+            <option>Fiqh</option><option>Resource</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Description *</label>
+          <textarea class="form-input" id="others-description" rows="5" placeholder="Item description..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('others')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEntry('others')">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW MODAL (universal) -->
+<div class="modal-backdrop" id="modal-view">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header">
+      <h3 id="view-modal-title">View Entry</h3>
+      <button class="modal-close" onclick="closeModal('view')">✕</button>
+    </div>
+    <div class="modal-body" id="view-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('view')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE DIALOG -->
+<div class="confirm-dialog" id="confirmDialog">
+  <div class="confirm-box">
+    <div class="confirm-icon">⚠️</div>
+    <h3>Delete Entry?</h3>
+    <p id="confirmMsg">This action cannot be undone. The entry will be permanently deleted.</p>
+    <div class="confirm-actions">
+      <button class="btn btn-outline" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn">🗑️ Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="cms-bridge.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

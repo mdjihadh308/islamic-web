@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us — Islamic History</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="frontend.css">
+</head>
+<body>
+  <div class="pattern-overlay"></div>
+  <nav class="navbar" id="topNav">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><div class="logo-icon">🌙</div><span>Islamic History</span></a>
+      <ul class="nav-menu">
+        <li><a href="index.html"><span class="icon">🏠</span> Home</a></li>
+        <li><a href="life.html"><span class="icon">📖</span> Life</a></li>
+        <li><a href="timeline.html"><span class="icon">⏳</span> Timeline</a></li>
+        <li><a href="hadis.html"><span class="icon">🤲</span> Du'a &amp; Hadis</a></li>
+        <li><a href="newstory.html"><span class="icon">✨</span> New Story</a></li>
+        <li><a href="about.html" class="active"><span class="icon">ℹ️</span> About</a></li>
+        <li><a href="others.html"><span class="icon">📚</span> Others</a></li>
+      </ul>
+    </div>
+  </nav>
+  <nav class="bottom-nav">
+    <div class="bottom-nav-items">
+      <a href="index.html" class="bottom-nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+      <a href="life.html" class="bottom-nav-item"><span class="nav-icon">📖</span><span class="nav-label">Life</span></a>
+      <a href="timeline.html" class="bottom-nav-item"><span class="nav-icon">⏳</span><span class="nav-label">Timeline</span></a>
+      <a href="hadis.html" class="bottom-nav-item"><span class="nav-icon">🤲</span><span class="nav-label">Du'a</span></a>
+      <a href="newstory.html" class="bottom-nav-item"><span class="nav-icon">✨</span><span class="nav-label">Stories</span></a>
+      <a href="others.html" class="bottom-nav-item"><span class="nav-icon">📚</span><span class="nav-label">More</span></a>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="page-hero">
+      <div class="container">
+        <div class="breadcrumb"><a href="index.html">Home</a> › About Us</div>
+        <h1>ℹ️ About Us</h1>
+        <p>Who we are, what we do, and why we do it</p>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <section class="section-sm">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-card fade-in"><span class="stat-icon">📖</span><div class="stat-value" id="stat-life">0</div><div class="stat-label">Life Entries</div></div>
+          <div class="stat-card fade-in"><span class="stat-icon">⏳</span><div class="stat-value" id="stat-timeline">0</div><div class="stat-label">Events</div></div>
+          <div class="stat-card fade-in"><span class="stat-icon">🤲</span><div class="stat-value" id="stat-hadis">0</div><div class="stat-label">Du'a &amp; Hadis</div></div>
+          <div class="stat-card fade-in"><span class="stat-icon">👤</span><div class="stat-value" id="stat-personalities">0</div><div class="stat-label">Personalities</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container" style="max-width:820px">
+        <div class="section-title fade-in">
+          <h2>Our Story</h2>
+          <div class="title-divider"><span class="ornament">✦ ☽ ✦</span></div>
+        </div>
+        <!-- ⚡ Dynamic about sections — rendered by main.js → initAboutPage() -->
+        <div class="fe-about-list" id="about-sections"></div>
+      </div>
+    </section>
+
+    <section class="section" style="background:linear-gradient(180deg,transparent,rgba(201,168,76,.03),transparent)">
+      <div class="container" style="max-width:600px;text-align:center">
+        <div class="section-title fade-in">
+          <h2>Get In Touch</h2>
+          <div class="title-divider"><span class="ornament">☽ ✦ ☾</span></div>
+        </div>
+        <div class="highlight-box fade-in">
+          <p style="color:var(--text-primary);margin-bottom:8px">📧 <strong>Email:</strong> <a href="mailto:info@islamichistory.com" style="color:var(--gold)">info@islamichistory.com</a></p>
+          <p style="color:var(--text-primary);margin-bottom:8px">🌐 <strong>Website:</strong> islamichistory.com</p>
+          <p style="color:var(--text-primary)">📍 <strong>Based in:</strong> Dhaka, Bangladesh</p>
+          <div style="margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <a href="mailto:info@islamichistory.com" class="btn btn-primary">📧 Contact Us</a>
+            <a href="login.html" class="btn btn-outline">🔐 Admin Panel</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer"><div class="container"><div class="footer-bottom" style="border-top:none;padding-top:0">
+      <p>© 2025 Islamic History. Made with ❤️ for the Ummah.</p>
+      <p><a href="index.html">← Back to Home</a></p>
+    </div></div></footer>
+  </div>
+  <button class="scroll-top" id="scrollTopBtn">↑</button>
+  <script src="cms-bridge.js"></script>
+  <script src="main.js"></script>
+  <script src="main-nav.js"></script>
+  <script>
+    // Also animate stats on this page
+    document.addEventListener('DOMContentLoaded', () => {
+      const s = { 'stat-life':'life','stat-timeline':'timeline','stat-hadis':'hadis','stat-personalities':'personalities' };
+      Object.entries(s).forEach(([id,k])=>{ const el=document.getElementById(id); if(el) animateCount(el,cmsGet(k).length); });
+    });
+  </script>
+</body>
+</html>

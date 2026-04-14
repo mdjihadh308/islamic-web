@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Islamic History — The Light of Faith</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="frontend.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
+</head>
+<body>
+  <div class="pattern-overlay"></div>
+
+  <!-- TOP NAVBAR -->
+  <nav class="navbar" id="topNav">
+    <div class="container">
+      <a href="index.html" class="nav-logo"><div class="logo-icon">🌙</div><span>Islamic History</span></a>
+      <ul class="nav-menu">
+        <li><a href="index.html" class="active"><span class="icon">🏠</span> Home</a></li>
+        <li><a href="life.html"><span class="icon">📖</span> Life</a></li>
+        <li><a href="timeline.html"><span class="icon">⏳</span> Timeline</a></li>
+        <li><a href="hadis.html"><span class="icon">🤲</span> Du'a &amp; Hadis</a></li>
+        <li><a href="newstory.html"><span class="icon">✨</span> New Story</a></li>
+        <li><a href="about.html"><span class="icon">ℹ️</span> About</a></li>
+        <li><a href="others.html"><span class="icon">📚</span> Others</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- BOTTOM NAV (mobile) -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-items">
+      <a href="index.html" class="bottom-nav-item active"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+      <a href="life.html" class="bottom-nav-item"><span class="nav-icon">📖</span><span class="nav-label">Life</span></a>
+      <a href="timeline.html" class="bottom-nav-item"><span class="nav-icon">⏳</span><span class="nav-label">Timeline</span></a>
+      <a href="hadis.html" class="bottom-nav-item"><span class="nav-icon">🤲</span><span class="nav-label">Du'a</span></a>
+      <a href="newstory.html" class="bottom-nav-item"><span class="nav-icon">✨</span><span class="nav-label">Stories</span></a>
+      <a href="others.html" class="bottom-nav-item"><span class="nav-icon">📚</span><span class="nav-label">More</span></a>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <span class="hero-bismillah">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</span>
+        <div class="hero-tag">🌟 Explore the Legacy of Islam</div>
+        <h1>Islamic History</h1>
+        <p class="hero-subtitle">Journey through the remarkable history of Islam — from the time of the Prophets to the Golden Age of the Islamic civilization.</p>
+        <div class="hero-cta">
+          <a href="life.html" class="btn btn-primary">🕌 Begin Journey</a>
+          <a href="timeline.html" class="btn btn-outline">⏳ View Timeline</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEARCH -->
+    <section class="search-section">
+      <div class="container">
+        <div class="search-box fade-in">
+          <input type="text" id="home-search-input" placeholder="Search stories, prophets, events, hadis..." onkeydown="if(event.key==='Enter') homeSearch()">
+          <button class="search-btn" onclick="homeSearch()">🔍 Search</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- DYNAMIC STATS -->
+    <section class="section-sm">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-card fade-in"><span class="stat-icon">📖</span><div class="stat-value" id="stat-life">0</div><div class="stat-label">Life Entries</div></div>
+          <div class="stat-card fade-in"><span class="stat-icon">⏳</span><div class="stat-value" id="stat-timeline">0</div><div class="stat-label">Timeline Events</div></div>
+          <div class="stat-card fade-in"><span class="stat-icon">🤲</span><div class="stat-value" id="stat-hadis">0</div><div class="stat-label">Du'a &amp; Hadis</div></div>
+          <div class="stat-card fade-in"><span class="stat-icon">✨</span><div class="stat-value" id="stat-stories">0</div><div class="stat-label">New Stories</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DYNAMIC LATEST STORIES -->
+    <section class="section">
+      <div class="container">
+        <div class="section-title fade-in">
+          <h2>Latest Stories</h2>
+          <div class="title-divider"><span class="ornament">☽ ✦ ☾</span></div>
+          <p class="subtitle">Newly added articles from Islamic history and knowledge</p>
+        </div>
+        <!-- ⚡ Rendered by main.js → renderHomeStories() -->
+        <div class="fe-grid" id="home-stories-grid">
+          <!-- Dynamic content loads here -->
+        </div>
+        <div style="text-align:center;margin-top:36px">
+          <a href="newstory.html" class="btn btn-outline">View All Stories →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- DYNAMIC PERSONALITIES -->
+    <section class="section" style="background:linear-gradient(180deg,transparent,rgba(201,168,76,.03),transparent)">
+      <div class="container">
+        <div class="section-title fade-in">
+          <h2>Great Personalities</h2>
+          <div class="title-divider"><span class="ornament">✦ ☽ ✦</span></div>
+          <p class="subtitle">Companions, scholars, and leaders who shaped Islamic history</p>
+        </div>
+        <!-- ⚡ Rendered by main.js → renderHomePersonalities() -->
+        <div class="fe-personalities-grid" id="home-personalities-grid">
+          <!-- Dynamic content loads here -->
+        </div>
+        <div style="text-align:center;margin-top:36px">
+          <a href="newstory.html#personalities" class="btn btn-outline">View All Personalities →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- DYNAMIC DUA OF THE DAY -->
+    <section class="section">
+      <div class="container">
+        <div class="section-title fade-in">
+          <h2>Du'a of the Day</h2>
+          <div class="title-divider"><span class="ornament">☽ ✦ ☾</span></div>
+        </div>
+        <div class="highlight-box fade-in" style="max-width:700px;margin:0 auto;text-align:center">
+          <!-- ⚡ Rendered by main.js → renderHomeDuaOfDay() -->
+          <div id="home-dua-box">
+            <div class="sk-line w80" style="margin:0 auto 10px;height:20px;border-radius:8px"></div>
+            <div class="sk-line w60" style="margin:0 auto;height:14px;border-radius:6px"></div>
+          </div>
+          <div style="margin-top:20px">
+            <a href="hadis.html" class="btn btn-green">View All Du'a &amp; Hadis</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="nav-logo" style="margin-bottom:14px"><div class="logo-icon">🌙</div><h3 style="margin:0">Islamic History</h3></div>
+            <p>A comprehensive digital resource exploring the rich history of Islam — from the time of the Prophets to the modern era.</p>
+            <div class="social-links">
+              <a href="#" class="social-link">📘</a><a href="#" class="social-link">🐦</a>
+              <a href="#" class="social-link">📷</a><a href="#" class="social-link">▶️</a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h4>Navigate</h4>
+            <ul class="footer-links">
+              <li><a href="index.html">🏠 Home</a></li>
+              <li><a href="life.html">📖 Prophet's Life</a></li>
+              <li><a href="timeline.html">⏳ Timeline</a></li>
+              <li><a href="hadis.html">🤲 Du'a &amp; Hadis</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Discover</h4>
+            <ul class="footer-links">
+              <li><a href="newstory.html">✨ New Stories</a></li>
+              <li><a href="newstory.html#personalities">👤 Personalities</a></li>
+              <li><a href="others.html">📚 Others</a></li>
+              <li><a href="about.html">ℹ️ About Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Admin</h4>
+            <ul class="footer-links">
+              <li><a href="login.html">🔐 Admin Login</a></li>
+              <li><a href="admin.html">⚙️ Admin Panel</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2025 Islamic History. Made with ❤️ for the Ummah.</p>
+          <p><a href="#">Privacy Policy</a> · <a href="#">Terms</a></p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <button class="scroll-top" id="scrollTopBtn">↑</button>
+
+  <script src="cms-bridge.js"></script>
+  <script src="main.js"></script>
+  <script src="main-nav.js"></script>
+</body>
+</html>
